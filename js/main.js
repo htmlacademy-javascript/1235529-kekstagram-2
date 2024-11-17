@@ -1,1 +1,1 @@
-import {similarDescriptionPhoto} from './create-photo-description';
+import './rendering-pictures';
