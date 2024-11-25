@@ -1,1 +1,3 @@
-import './rendering-pictures';
+import {similarDescriptionPhoto} from './insert-thumbnails';
+
+similarDescriptionPhoto();

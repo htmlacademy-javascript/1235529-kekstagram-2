@@ -1,7 +1,11 @@
-import {similarDescriptionPhoto} from './create-photo-description';
+import {openPhoto} from './rendering-pictures-full-size';
 
 const thumbnailTemplate = document.querySelector('#picture').content.querySelector('.picture');
-const pictures = document.querySelector('.pictures');
+
+const onThumbnailClick = (evt, photo) => {
+  evt.preventDefault();
+  openPhoto(photo);
+};
 
 const createThumbnail = (photo) => {
   const thumbnail = thumbnailTemplate.cloneNode(true);
@@ -16,15 +20,11 @@ const createThumbnail = (photo) => {
   const thumbnailComments = thumbnail.querySelector('.picture__comments');
   thumbnailComments.textContent = photo.comments.length;
 
+  thumbnail.addEventListener('click', (evt) => {
+    onThumbnailClick(evt, photo);
+  });
+
   return thumbnail;
 };
 
-const fragment = document.createDocumentFragment();
-
-similarDescriptionPhoto.forEach((photo) => {
-  fragment.append(createThumbnail(photo));
-});
-
-pictures.append(fragment);
-
-
+export {createThumbnail};
