@@ -18,6 +18,12 @@ function createIdGenerator () {
   };
 }
 
-export {getRandomInteger};
-export {getRandomArrayElement};
-export {createIdGenerator};
+//Проверка на escape
+const isEscapeKey = (evt) => evt.key === 'Escape';
+
+export {
+  getRandomInteger,
+  getRandomArrayElement,
+  createIdGenerator,
+  isEscapeKey
+};
