@@ -1,4 +1,4 @@
-import {openPhoto} from './rendering-pictures-full-size';
+import {openPhoto} from './open-big-pictures.js';
 
 const thumbnailTemplate = document.querySelector('#picture').content.querySelector('.picture');
 
