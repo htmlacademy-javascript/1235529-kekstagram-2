@@ -1,4 +1,4 @@
-const commentTemplate = document.querySelector('.social__comment');
+const commentTemplate = document.querySelector('#comment').content.querySelector('.social__comment');
 
 //Создаем шаблон комментария
 const getComment = (commentData) => {

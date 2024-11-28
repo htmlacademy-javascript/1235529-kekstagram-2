@@ -1,3 +1,3 @@
-import {similarDescriptionPhoto} from './insert-thumbnails';
+import {similarDescriptionPhoto} from './insert-thumbnails.js';
 
 similarDescriptionPhoto();

@@ -1,5 +1,5 @@
-import {similarDescriptionPhoto} from './create-photo-description';
-import {createThumbnail} from './rendering-pictures';
+import {similarDescriptionPhoto} from './create-pictures-description.js';
+import {createThumbnail} from './rendering-pictures.js';
 
 const pictures = document.querySelector('.pictures');
 const fragment = document.createDocumentFragment();
