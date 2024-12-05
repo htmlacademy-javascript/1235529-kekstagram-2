@@ -1,16 +1,20 @@
 import { isEscapeKey } from './utils.js';
 import { validateHashtags, errorHashtags } from './validate-hashtags.js';
 import { validateDescription, errorDescription } from './validate-description.js';
+import { resetEffect } from './filters.js';
+import {resetZoom, changeZoom} from './zoom.js';
 
 const imgUploadForm = document.querySelector('.img-upload__form');
 const imgUploadSubmit = imgUploadForm.querySelector('.img-upload__submit');
-const overlay = imgUploadForm.querySelector('.img-upload__overlay');
+const imgOverlay = imgUploadForm.querySelector('.img-upload__overlay');
 const imgUploadInput = imgUploadForm.querySelector('.img-upload__input');
 const inputHashtags = imgUploadForm.querySelector('.text__hashtags');
 const previewImg = imgUploadForm.querySelector('.img-upload__preview img');
 const effectsPreviews = imgUploadForm.querySelectorAll('.effects__preview');
 const inputDescription = imgUploadForm.querySelector('.text__description');
 const imgUploadCancel = imgUploadForm.querySelector('.img-upload__cancel');
+const scaleControlSmaller = imgUploadForm.querySelector('.scale__control--smaller');
+const scaleControlBigger = imgUploadForm.querySelector('.scale__control--bigger');
 
 // Добавление валидации к форме загрузки
 const pristine = new Pristine(imgUploadForm, {
@@ -38,7 +42,7 @@ const formImgUploadOpen = () => {
   const file = imgUploadInput.files[0];
   showPreview(file);
 
-  overlay.classList.remove('hidden');
+  imgOverlay.classList.remove('hidden');
   document.body.classList.add('modal-open');
 
   imgUploadCancel.addEventListener('click', onCancelClick);
@@ -47,7 +51,7 @@ const formImgUploadOpen = () => {
 
 //Закрытие формы
 const formImgUploadClose = () => {
-  overlay.classList.add('hidden');
+  imgOverlay.classList.add('hidden');
   document.body.classList.remove('modal-open');
 
   imgUploadCancel.removeEventListener('click', onCancelClick);
@@ -59,7 +63,14 @@ const formImgUploadClose = () => {
   previewImg.src = '';
   pristine.reset();
   imgUploadForm.reset();
+  imgUploadSubmit.disabled = false;
+  resetEffect();
+  resetZoom();
 };
+
+//обработчик клика на zoom
+scaleControlSmaller.addEventListener('click', () => changeZoom(-1));
+scaleControlBigger.addEventListener('click', () => changeZoom());
 
 //закрытие формы
 function onCancelClick (evt) {
@@ -73,10 +84,8 @@ function onDocumentKeydown (evt) {
     evt.preventDefault();
 
     if (document.activeElement === inputHashtags || document.activeElement === inputDescription) {
-      evt.stopPrepagation();
-    } else {
-      formImgUploadClose();
-    }
+      return evt.stopPrepagation();
+    } formImgUploadClose();
   }
 }
 
@@ -88,19 +97,15 @@ imgUploadInput.addEventListener('input', () => {
 //pristine на хэштеги
 function onHashtagsInput () {
   if (pristine.validate()) {
-    imgUploadSubmit.disabled = false;
-  } else {
-    imgUploadSubmit.disabled = true;
-  }
+    return (imgUploadSubmit.disabled = false);
+  } imgUploadSubmit.disabled = true;
 }
 
 //pristine на описание
 function onDescriptionInput () {
   if (pristine.validate()) {
-    imgUploadSubmit.disabled = false;
-  } else {
-    imgUploadSubmit.disabled = true;
-  }
+    return (imgUploadSubmit.disabled = false);
+  } imgUploadSubmit.disabled = true;
 }
 
 pristine.addValidator(inputHashtags, validateHashtags, errorHashtags, 1, false);
