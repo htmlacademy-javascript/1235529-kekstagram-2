@@ -55,7 +55,7 @@ effects.none();
 let currentEffect = '';
 
 const onEffectsListClick = (evt) => {
-  let target = evt.target;
+  const target = evt.target;
 
   if (target.classList.contains('effects__preview')) {
     sliderElement.noUiSlider.set(Slider.MAX);
