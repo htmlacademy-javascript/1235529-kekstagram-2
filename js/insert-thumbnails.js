@@ -1,12 +1,17 @@
-import {similarDescriptionPhoto} from './create-pictures-description.js';
 import {createThumbnail} from './rendering-pictures.js';
+import {getData} from './api.js';
+import {showPopup} from './popup-error.js';
 
-const pictures = document.querySelector('.pictures');
+const picturesContainer = document.querySelector('.pictures');
 const fragment = document.createDocumentFragment();
 
-similarDescriptionPhoto.forEach((photo) => {
-  fragment.append(createThumbnail(photo));
-  pictures.append(fragment);
-});
+const insertThumbnails = (pictures) => {
+  pictures.forEach((photo) => {
+    fragment.append(createThumbnail(photo));
+    picturesContainer.append(fragment);
+  });
+};
 
-export {similarDescriptionPhoto};
+getData()
+  .then((pictures)=> insertThumbnails(pictures))
+  .catch((err) => showPopup(err.message));
