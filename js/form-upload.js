@@ -3,6 +3,9 @@ import { validateHashtags, errorHashtags } from './validate-hashtags.js';
 import { validateDescription, errorDescription } from './validate-description.js';
 import { resetEffect } from './filters.js';
 import {resetZoom, changeZoom} from './zoom.js';
+import { sendData } from './api.js';
+import { showAlertSucces } from './alert-success.js';
+import {showAlertError} from './alert-error.js';
 
 const imgUploadForm = document.querySelector('.img-upload__form');
 const imgUploadSubmit = imgUploadForm.querySelector('.img-upload__submit');
@@ -113,3 +116,24 @@ inputHashtags.addEventListener('input', onHashtagsInput);
 
 pristine.addValidator(inputDescription, validateDescription, errorDescription, 2, false);
 inputDescription.addEventListener('input', onDescriptionInput);
+
+const onFormImgUploadSubmit = (evt) => {
+  evt.preventDefault();
+  imgUploadSubmit.disabled = true;
+
+  const formData = new FormData(imgUploadForm);
+
+  sendData(formData)
+    .then(() => {
+      showAlertSucces();
+      formImgUploadClose();
+    })
+    .catch((err) => {
+      showAlertError(err.message);
+    })
+    .finally(() => {
+      imgUploadSubmit.disabled = false;
+    });
+};
+
+imgUploadForm.addEventListener('submit', onFormImgUploadSubmit);
