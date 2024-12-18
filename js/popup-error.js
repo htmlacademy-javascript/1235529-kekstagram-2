@@ -1,3 +1,5 @@
+const DELAY_TIME = 5000;
+
 const popupErroreTemplate = document.querySelector('#data-error').content;
 
 const showPopup = (message) => {
@@ -8,7 +10,7 @@ const showPopup = (message) => {
 
   document.body.append(popupError);
 
-  setTimeout(removePopup, 5000);
+  setTimeout(removePopup, DELAY_TIME);
 };
 
 function removePopup(){
