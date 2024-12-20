@@ -52,6 +52,7 @@ const formImgUploadOpen = () => {
   document.addEventListener('keydown', onDocumentKeydown);
 };
 
+
 //Закрытие формы
 const formImgUploadClose = () => {
   imgOverlay.classList.add('hidden');
@@ -60,16 +61,13 @@ const formImgUploadClose = () => {
   imgUploadCancel.removeEventListener('click', onCancelClick);
   document.removeEventListener('keydown', onDocumentKeydown);
 
-  imgUploadInput.value = '';
-  inputHashtags.value = '';
-  inputDescription.value = '';
-  previewImg.src = '';
   pristine.reset();
   imgUploadForm.reset();
   imgUploadSubmit.disabled = false;
   resetEffect();
   resetZoom();
 };
+
 
 //обработчик клика на zoom
 scaleControlSmaller.addEventListener('click', () => changeZoom(-1));
