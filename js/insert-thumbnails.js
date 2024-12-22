@@ -11,7 +11,6 @@ const clearThumbnails = () => {
   allPictures.forEach((picture) => picture.remove());
 };
 
-
 const insertThumbnails = (pictures) => {
   clearThumbnails();
   pictures.forEach((photo) => {
