@@ -1,99 +1,152 @@
-const
-  DEFAULT_EFFECT_LEVEL = 100,
-  EFFECTS_STEP = 0.01,
-  MAX_BLUR_VALUE = 3,
-  MAX_BRIGHTNESS = 3;
+const DEFAULT_EFFECT = 'none';
 
-const Slider = {
-  MIN: 0,
-  MAX: 100,
-  STEP: 1,
-};
-
-const uploadForm = document.querySelector('.img-upload__form');
-const effectsList = uploadForm.querySelector('.effects__list');
-const imgPreview = uploadForm.querySelector('.img-upload__preview');
-const image = imgPreview.querySelector('img');
-const imgSliderUpload = uploadForm.querySelector('.img-upload__effect-level');
-const effectValue = uploadForm.querySelector('.effect-level__value');
-const sliderElement = uploadForm.querySelector('.effect-level__slider');
-
-//добавляем дефолтное значение для шкалы
-effectValue.value = DEFAULT_EFFECT_LEVEL;
-
-//правила для всех эффектов в виде обьекта
 const effects = {
-  none: () => {
-    imgSliderUpload.classList.add('visually-hidden');
-    return 'none';
+  none: {
+    sliderSettings: {
+      range: {
+        min: 0,
+        max: 0,
+      },
+      step: 0,
+      start: 0,
+    },
+    getEffectCss: () => 'none'
   },
-  chrome: () => {
-    imgSliderUpload.classList.remove('visually-hidden');
-    return `grayscale(${parseInt(effectValue.value, 10) * EFFECTS_STEP})`;
+  chrome: {
+    sliderSettings: {
+      range: {
+        min: 0,
+        max: 1,
+      },
+      step: 0.1,
+      start: 1,
+    },
+    getEffectCss: (value) => `grayscale(${value})`
   },
-  sepia: () => {
-    imgSliderUpload.classList.remove('visually-hidden');
-    return `sepia(${parseInt(effectValue.value, 10) * EFFECTS_STEP})`;
+  sepia: {
+    sliderSettings: {
+      range: {
+        min: 0,
+        max: 1,
+      },
+      step: 0.1,
+      start: 1,
+    },
+    getEffectCss: (value) => `sepia(${value})`
   },
-  marvin: () => {
-    imgSliderUpload.classList.remove('visually-hidden');
-    return `invert(${Math.floor(effectValue.value, 10)}%)`;
+  marvin: {
+    sliderSettings: {
+      range: {
+        min: 0,
+        max: 100,
+      },
+      step: 1,
+      start: 100,
+    },
+    getEffectCss: (value) => `invert(${value}%)`
   },
-  phobos: () => {
-    imgSliderUpload.classList.remove('visually-hidden');
-    return `blur(${(parseInt(effectValue.value, 10) * MAX_BLUR_VALUE) * EFFECTS_STEP}px)`;
+  phobos: {
+    sliderSettings: {
+      range: {
+        min: 0,
+        max: 3,
+      },
+      step: 0.1,
+      start: 3,
+    },
+    getEffectCss: (value) => `blur(${value}px)`
   },
-  heat: () => {
-    imgSliderUpload.classList.remove('visually-hidden');
-    return `brightness(${(parseInt(effectValue.value, 10) * MAX_BRIGHTNESS) * EFFECTS_STEP})`;
-  },
-};
-
-//добавляется дефолтный эффект
-effects.none();
-
-let currentEffect = '';
-
-const onEffectsListClick = (evt) => {
-  const target = evt.target;
-
-  if (target.classList.contains('effects__preview')) {
-    sliderElement.noUiSlider.set(Slider.MAX);
-    effectValue.value = Slider.MAX;
-
-    currentEffect = target.classList[1].replace('effects__preview--', '');
-    image.style.filter = effects[currentEffect]();
+  heat: {
+    sliderSettings: {
+      range: {
+        min: 1,
+        max: 3,
+      },
+      step: 0.1,
+      start: 3,
+    },
+    getEffectCss: (value) => `brightness(${value})`
   }
 };
 
-effectsList.addEventListener('click', onEffectsListClick);
 
-//добавляем слайдер на элемент
-noUiSlider.create(sliderElement, {
+const formImgUpload = document.querySelector('.img-upload__form');
+const effectsList = formImgUpload.querySelector('.effects__list');
+const effectLevel = formImgUpload.querySelector('.img-upload__effect-level');
+const effectLevelInput = formImgUpload.querySelector('.effect-level__value');
+const slider = formImgUpload.querySelector('.effect-level__slider');
+const previewImg = formImgUpload.querySelector('.img-upload__preview img');
+
+
+let currentEffect = DEFAULT_EFFECT;
+
+noUiSlider.create(slider, {
   range: {
-    min: Slider.MIN,
-    max: Slider.MAX,
+    min: effects[DEFAULT_EFFECT].sliderSettings.range.min,
+    max: effects[DEFAULT_EFFECT].sliderSettings.range.max,
   },
-  start: Slider.MAX,
-  step: Slider.STEP,
+  step: effects[DEFAULT_EFFECT].sliderSettings.step,
+  start: effects[DEFAULT_EFFECT].sliderSettings.range.max,
   connect: 'lower',
+  format: {
+    to: (value) => {
+      if (Number.isInteger(value)) {
+        return value.toFixed(0);
+      }
+      return value.toFixed(1);
+    },
+    from: (value) => parseFloat(value)
+  }
 });
 
-//связка слайдера и импута
-sliderElement.noUiSlider.on('slide', (value) => {
-  effectValue.value = [...value];
-  image.style.filter = effects[currentEffect.replace('effects__preview--', '')]();
-});
 
-//сброс эффекта
-const resetEffect = () => {
-  image.style.removeProperty('filter');
-  effectValue.value = '';
-  sliderElement.noUiSlider.updateOptions({
-    start: Slider.MAX,
-  });
-  effectsList.querySelector('#effect-none').checked = true;
-  effects.none();
+const setSliderSettings = () => {
+  slider.noUiSlider.updateOptions(effects[currentEffect].sliderSettings);
+  effectLevelInput.value = effects[currentEffect].sliderSettings.start;
+
+  if (currentEffect === DEFAULT_EFFECT) {
+    effectLevel.classList.add('hidden');
+  } else {
+    effectLevel.classList.remove('hidden');
+  }
 };
+
+
+const updateEffect = () => {
+  previewImg.style.filter = effects[currentEffect].getEffectCss(effectLevelInput.value);
+};
+
+
+const resetEffect = () => {
+  currentEffect = DEFAULT_EFFECT;
+  setSliderSettings();
+  updateEffect();
+};
+
+
+const onEffectsListClick = (evt) => {
+  let target = evt.target;
+
+  if (target.classList.contains('effects__label')) {
+    target = evt.target.querySelector('span');
+  }
+
+  if (target.classList.contains('effects__preview')) {
+    currentEffect = target.classList[1].replace('effects__preview--', '');
+    setSliderSettings();
+    updateEffect();
+  }
+};
+
+
+const onSliderUpdate = () => {
+  effectLevelInput.value = slider.noUiSlider.get();
+  updateEffect();
+};
+
+
+effectsList.addEventListener('click', onEffectsListClick);
+slider.noUiSlider.on('update', onSliderUpdate);
+
 
 export { resetEffect };

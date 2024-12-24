@@ -4,8 +4,7 @@ import { validateDescription, errorDescription } from './validate-description.js
 import { resetEffect } from './filters.js';
 import {resetZoom, changeZoom} from './zoom.js';
 import { sendData } from './api.js';
-import { showAlertSucces } from './alert-success.js';
-import {showAlertError} from './alert-error.js';
+import { showAlert } from './alert.js';
 
 const imgUploadForm = document.querySelector('.img-upload__form');
 const imgUploadSubmit = imgUploadForm.querySelector('.img-upload__submit');
@@ -47,6 +46,7 @@ const formImgUploadOpen = () => {
 
   imgOverlay.classList.remove('hidden');
   document.body.classList.add('modal-open');
+  resetEffect();
 
   imgUploadCancel.addEventListener('click', onCancelClick);
   document.addEventListener('keydown', onDocumentKeydown);
@@ -54,6 +54,7 @@ const formImgUploadOpen = () => {
 
 
 //Закрытие формы
+
 const formImgUploadClose = () => {
   imgOverlay.classList.add('hidden');
   document.body.classList.remove('modal-open');
@@ -81,12 +82,14 @@ function onCancelClick (evt) {
 
 //закрывает форму на ESC
 function onDocumentKeydown (evt) {
-  if (isEscapeKey(evt)) {
-    evt.preventDefault();
+  const currentAlert = document.querySelector('#alert-current');
 
-    if (document.activeElement === inputHashtags || document.activeElement === inputDescription) {
-      return evt.stopPrepagation();
-    } formImgUploadClose();
+  if (isEscapeKey(evt) &&
+      !currentAlert &&
+      document.activeElement !== inputHashtags &&
+      document.activeElement !== inputDescription) {
+    evt.preventDefault();
+    formImgUploadClose();
   }
 }
 
@@ -114,7 +117,7 @@ inputHashtags.addEventListener('input', onHashtagsInput);
 
 pristine.addValidator(inputDescription, validateDescription, errorDescription, 2, false);
 inputDescription.addEventListener('input', onDescriptionInput);
-
+const SUCCESS_UPLOAD_MESSAGE = 'Изображение успешно загружено';
 const onFormImgUploadSubmit = (evt) => {
   evt.preventDefault();
   imgUploadSubmit.disabled = true;
@@ -123,11 +126,11 @@ const onFormImgUploadSubmit = (evt) => {
 
   sendData(formData)
     .then(() => {
-      showAlertSucces();
+      showAlert('success', SUCCESS_UPLOAD_MESSAGE);
       formImgUploadClose();
     })
     .catch((err) => {
-      showAlertError(err.message);
+      showAlert('error', err.message);
     })
     .finally(() => {
       imgUploadSubmit.disabled = false;

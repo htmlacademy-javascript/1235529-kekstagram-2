@@ -1,7 +1,7 @@
 import {createThumbnail} from './rendering-pictures.js';
 import {getData} from './api.js';
 import {showPopup} from './popup-error.js';
-import {openFilter} from './photo-filter.js';
+import {initializeFilter} from './photo-filter.js';
 
 const picturesContainer = document.querySelector('.pictures');
 const fragment = document.createDocumentFragment();
@@ -10,6 +10,7 @@ const clearThumbnails = () => {
   const allPictures = picturesContainer.querySelectorAll('.picture');
   allPictures.forEach((picture) => picture.remove());
 };
+
 
 const insertThumbnails = (pictures) => {
   clearThumbnails();
@@ -22,7 +23,7 @@ const insertThumbnails = (pictures) => {
 getData()
   .then((pictures)=> {
     insertThumbnails(pictures);
-    openFilter(pictures);
+    initializeFilter(pictures);
   })
   .catch((err) => showPopup(err.message));
 
