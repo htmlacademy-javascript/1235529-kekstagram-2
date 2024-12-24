@@ -25,18 +25,15 @@ const pristine = new Pristine(imgUploadForm, {
   errorTextClass: 'img-upload__field-wrapper--error'
 });
 
-//Заполняет предварительный просмотр фото
+//Показ превью фото
 const showPreview = (file) => {
-  const reader = new FileReader();
+  const fileUrl = URL.createObjectURL(file);
 
-  reader.onload = (evt) => {
-    previewImg.src = evt.target.result;
+  previewImg.src = fileUrl;
 
-    for (const effectsPreview of effectsPreviews) {
-      effectsPreview.style.backgroundImage = `url(${evt.target.result})`;
-    }
-  };
-  reader.readAsDataURL(file);
+  effectsPreviews.forEach((preview) => {
+    preview.style.backgroundImage = `url(${fileUrl})`;
+  });
 };
 
 //открытие формы
