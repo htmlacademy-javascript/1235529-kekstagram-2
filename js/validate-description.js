@@ -5,6 +5,6 @@ const errorMessage = `Максимальная длина описания ${DES
 const validateDescription = (value) => value.length <= DESCRIPTION_SYMBOLS_MAX;
 
 //сообщение ошибки
-const errorDescription = () => errorMessage;
+const getErrorDescription = () => errorMessage;
 
-export { validateDescription, errorDescription };
+export { validateDescription, getErrorDescription };

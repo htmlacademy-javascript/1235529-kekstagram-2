@@ -7,21 +7,21 @@ const onThumbnailClick = (evt, photo) => {
   openPhoto(photo);
 };
 
-const createThumbnail = (photo) => {
+const createThumbnail = (photos) => {
   const thumbnail = thumbnailTemplate.cloneNode(true);
 
   const thumbnailLikes = thumbnail.querySelector('.picture__likes');
-  thumbnailLikes.textContent = photo.likes;
+  thumbnailLikes.textContent = photos.likes;
 
   const thumbnailImg = thumbnail.querySelector('.picture__img');
-  thumbnailImg.src = photo.url;
-  thumbnailImg.alt = photo.description;
+  thumbnailImg.src = photos.url;
+  thumbnailImg.alt = photos.description;
 
   const thumbnailComments = thumbnail.querySelector('.picture__comments');
-  thumbnailComments.textContent = photo.comments.length;
+  thumbnailComments.textContent = photos.comments.length;
 
   thumbnail.addEventListener('click', (evt) => {
-    onThumbnailClick(evt, photo);
+    onThumbnailClick(evt, photos);
   });
 
   return thumbnail;

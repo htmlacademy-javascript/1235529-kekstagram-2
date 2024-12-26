@@ -56,6 +56,6 @@ const validateHashtags = (value) => {
 };
 
 //сообщение ошибки
-const errorHashtags = () => errorMessage;
+const getErrorHashtags = () => errorMessage;
 
-export { validateHashtags, errorHashtags };
+export { validateHashtags, getErrorHashtags };

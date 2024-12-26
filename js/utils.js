@@ -12,9 +12,9 @@ const debounce = (callback, timeoutDelay = 500) => {
 };
 
 //Перемешивает массив
-const shuffleArray = (array) => {
-  array.sort(() => 0.5 - Math.random());
-  return array;
+const shuffleArray = (data) => {
+  data.sort(() => 0.5 - Math.random());
+  return data;
 };
 
 export {isEscapeKey, debounce, shuffleArray};

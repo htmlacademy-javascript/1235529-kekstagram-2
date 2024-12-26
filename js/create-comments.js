@@ -27,10 +27,10 @@ const showMoreComments = () => {
   }
 };
 
-const insertComments = (photo) => {
-  comments = photo.comments;
+const insertComments = (photos) => {
+  comments = photos.comments;
 
-  bigPhotoCommentsAll.textContent = photo.comments.length;
+  bigPhotoCommentsAll.textContent = photos.comments.length;
   showMoreComments();
 };
 
